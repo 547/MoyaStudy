@@ -7,7 +7,7 @@
 //
 
 import UIKit
-
+import Moya
 class ViewController: UIViewController {
 
     override func viewDidLoad() {
@@ -44,6 +44,18 @@ class ViewController: UIViewController {
         }
         print("new ======= \(new)")
         
+        
+        let min = array.min()
+        print("min ==== \(min ?? "no")")
+        
+        
+        //MARK:会把最后一个删掉 返回一个新的 array
+        let dropLast = array.dropLast()
+        print("drop last ===== \(dropLast) \(array)")
+        //MARK:会把第一个删掉 返回一个新的 array
+        let dropFirst = array.dropFirst()
+        print("drop firsr ===== \(dropFirst)")
+        
     
     }
 
@@ -53,7 +65,41 @@ class ViewController: UIViewController {
     }
     
     
+    
 
 
+}
+
+enum IFood {
+    case test
+}
+extension IFood: TargetType {
+    var baseURL: URL {
+        return URL.init(string: "http://121.41.36.161")!
+    }
+    
+    var path: String {
+        return "/restful/web/index.php/takeaway"
+    }
+    
+    var method: Moya.Method {
+        return .get
+    }
+    
+    var sampleData: Data {
+        let dic = ["food":"0"]
+        let data = try! JSONSerialization.data(withJSONObject: dic, options: .prettyPrinted)
+        return data
+    }
+    
+    var task: Task {
+        return .requestPlain
+    }
+    
+    var headers: [String : String]? {
+        return nil
+    }
+    
+    
 }
 
