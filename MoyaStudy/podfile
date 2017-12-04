@@ -1,0 +1,9 @@
+use_frameworks!
+target 'MoyaStudy' do
+  pod 'Alamofire'
+  pod 'Moya'
+  pod 'RxSwift'
+  pod 'RxCocoa'
+  pod 'RxDataSources'
+end
+
