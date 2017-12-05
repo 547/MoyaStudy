@@ -56,7 +56,13 @@ class ViewController: UIViewController {
         let dropFirst = array.dropFirst()
         print("drop firsr ===== \(dropFirst)")
         
-    
+        
+        
+        let api = IFoodApi.init()
+        api.appendData = ["testw":89]
+        
+        
+        
     }
 
     override func didReceiveMemoryWarning() {
@@ -65,41 +71,54 @@ class ViewController: UIViewController {
     }
     
     
+
+
+}
+class IFoodApi: TargetType {
     
-
-
-}
-
-enum IFood {
-    case test
-}
-extension IFood: TargetType {
     var baseURL: URL {
         return URL.init(string: "http://121.41.36.161")!
     }
     
-    var path: String {
-        return "/restful/web/index.php/takeaway"
+    var path: String{
+        return basicPath
     }
     
-    var method: Moya.Method {
-        return .get
+    var method: Moya.Method = .get
+    
+    var sampleData: Data{
+        return try! JSONSerialization.data(withJSONObject: commonData, options: .prettyPrinted)
     }
     
-    var sampleData: Data {
-        let dic = ["food":"0"]
-        let data = try! JSONSerialization.data(withJSONObject: dic, options: .prettyPrinted)
-        return data
+    var task: Task = .requestPlain
+    
+    var headers: [String : String]? = nil
+    
+    private var commonData:[String:Any] = ["test":1]
+    var appendData:[String:Any]?{
+        didSet{
+            guard let value = appendData, value.count > 0 else { return }
+            commonData.merge(value) { (first, second) -> Void in
+                print("first ===== \(first)")
+                print("second ===== \(second)")
+            }
+            print("commonData ====== \(commonData)")
+        }
     }
     
-    var task: Task {
-        return .requestPlain
+    private var basicPath:String = "/restful/web/index.php/takeaway"
+    var appendPath:String?{
+        didSet{
+            guard let value = appendPath, value.count > 0 else { return }
+            basicPath += value
+        }
     }
-    
-    var headers: [String : String]? {
-        return nil
-    }
-    
     
 }
 
+extension IFoodApi {
+    static func test() -> IFoodApi {
+        let api = IFoodApi.init()
+        return api
+    }
+}
